@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+<launch>
+
+    <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+    <arg name="paused" default="true"/>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="gui" default="true"/>
+    <arg name="headless" default="false"/>
+    <arg name="debug" default="false"/>
+
+    <arg name="robot_drop_point" default="1.48"/>       <!-- w.r.t to the center of axis Z of the torso-->
+
+    <!-- Launch gazebo -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find robotao_gazebo)/world/empty_robotis.world"/>
+        <arg name="debug" value="$(arg debug)"/>
+        <arg name="gui" value="$(arg gui)"/>
+        <arg name="paused" value="$(arg paused)"/>
+        <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+        <arg name="headless" value="$(arg headless)"/>
+    </include>
+
+    <!-- Load the URDF into the ROS Parameter Server -->
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(find robotao_description)/urdf/robotao.urdf.xacro'"/>
+
+    <!-- Spawn the robot in gazebo world -->
+    <node pkg="gazebo_ros" type="spawn_model" name="urdf_spawner"
+          respawn="false" output="screen"
+          args="-urdf -model robotao -z 1.6 -param robot_description"/>
+
+    <!-- Launch position controller of the robot -->
+    <rosparam file="$(find robotao_gazebo)/config/position_controller.yaml" command="load"/>
+
+    <node pkg="controller_manager" type="spawner" name="controller_spawner" respawn="false"
+          output="screen" ns="robotao" args="joint_state_controller
+                                             left_hip_pitch_position
+                                             right_hip_pitch_position
+                                             left_hip_roll_position
+                                             right_hip_roll_position
+                                             left_hip_yaw_position
+                                             right_hip_yaw_position
+                                             left_knee_pitch_position
+                                             right_knee_pitch_position
+                                             left_ankle_pitch_position
+                                             right_ankle_pitch_position
+                                             left_ankle_roll_position
+                                             right_ankle_roll_position" />
+
+</launch>

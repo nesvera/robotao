@@ -1,0 +1,70 @@
+robotao:
+  # Publish all joint states -----------------------------------
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50  
+
+  # Position Controllers ---------------------------------------
+
+  # Hip
+  left_hip_pitch_position:
+    type: effort_controllers/JointPositionController
+    joint: left_hip_pitch
+    pid: {p: 15000.0, i: 0.1, d: 800.0}
+
+  right_hip_pitch_position:
+    type: effort_controllers/JointPositionController
+    joint: right_hip_pitch
+    pid: {p: 15000.0, i: 0.1, d: 800.0}
+
+  left_hip_roll_position:
+    type: effort_controllers/JointPositionController
+    joint: left_hip_roll
+    pid: {p: 15000.0, i: 0.1, d: 800.0}
+
+  right_hip_roll_position:
+    type: effort_controllers/JointPositionController
+    joint: right_hip_roll
+    pid: {p: 15000.0, i: 0.1, d: 800.0}
+
+  left_hip_yaw_position:
+    type: effort_controllers/JointPositionController
+    joint: left_hip_yaw
+    pid: {p: 15000.0, i: 0.1, d: 800.0}
+
+  right_hip_yaw_position:
+    type: effort_controllers/JointPositionController
+    joint: right_hip_yaw
+    pid: {p: 15000.0, i: 0.1, d: 800.0}
+
+  # Knee
+  left_knee_pitch_position:
+    type: effort_controllers/JointPositionController
+    joint: left_knee_pitch
+    pid: {p: 15000.0, i: 0.1, d: 800.0}
+
+  right_knee_pitch_position:
+    type: effort_controllers/JointPositionController
+    joint: right_knee_pitch
+    pid: {p: 15000.0, i: 0.1, d: 800.0}
+
+  # Ankle
+  left_ankle_pitch_position:
+    type: effort_controllers/JointPositionController
+    joint: left_ankle_pitch
+    pid: {p: 15000.0, i: 0.1, d: 800.0}
+
+  right_ankle_pitch_position:
+    type: effort_controllers/JointPositionController
+    joint: right_ankle_pitch
+    pid: {p: 15000.0, i: 0.1, d: 800.0}
+
+  left_ankle_roll_position:
+    type: effort_controllers/JointPositionController
+    joint: left_ankle_roll
+    pid: {p: 15000.0, i: 0.1, d: 800.0}
+
+  right_ankle_roll_position:
+    type: effort_controllers/JointPositionController
+    joint: right_ankle_roll
+    pid: {p: 15000.0, i: 0.1, d: 800.0}

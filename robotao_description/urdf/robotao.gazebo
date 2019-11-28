@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<robot>
+
+    <!-- ros control plugin -->
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/robotao</robotNamespace>
+            <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="ground_truth" filename="libgazebo_ros_p3d.so">			
+            <frameName>map</frameName>
+            <bodyName>torso_link</bodyName>
+            <topicName>odom</topicName>
+            <updateRate>100.0</updateRate>
+        </plugin>
+    </gazebo>
+
+    <!-- Body-->
+    <gazebo reference="torso_link">
+        <material>Gazebo/Orange</material>
+    </gazebo>
+
+    <gazebo reference="left_hip_aux_link_1">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+    <gazebo reference="right_hip_aux_link_1">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+    <gazebo reference="left_hip_aux_link_2">
+        <material>Gazebo/Red</material>
+    </gazebo>
+
+    <gazebo reference="right_hip_aux_link_2">
+        <material>Gazebo/Red</material>
+    </gazebo>
+
+    <gazebo reference="left_hip_aux_link_3">
+        <material>Gazebo/Green</material>
+    </gazebo>
+
+    <gazebo reference="right_hip_aux_link_3">
+        <material>Gazebo/Green</material>
+    </gazebo>
+
+    <gazebo reference="left_upper_leg">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+    <gazebo reference="right_upper_leg">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+    <gazebo reference="left_knee_aux_link_1">
+        <material>Gazebo/Green</material>
+    </gazebo>
+
+    <gazebo reference="right_knee_aux_link_1">
+        <material>Gazebo/Green</material>
+    </gazebo>
+
+    <gazebo reference="left_lower_leg">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+    <gazebo reference="right_lower_leg">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+    <gazebo reference="left_ankle_aux_link_1">
+        <material>Gazebo/Green</material>
+    </gazebo>
+
+    <gazebo reference="right_ankle_aux_link_1">
+        <material>Gazebo/Green</material>
+    </gazebo>
+
+    <gazebo reference="left_ankle_aux_link_2">
+        <material>Gazebo/Red</material>
+    </gazebo>
+
+    <gazebo reference="right_ankle_aux_link_2">
+        <material>Gazebo/Red</material>
+    </gazebo>
+
+    <gazebo reference="left_foot">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+    <gazebo reference="right_foot">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+
+
+</robot>

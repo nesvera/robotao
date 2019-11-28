@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>robotao_gazebo</name>
+  <version>0.0.0</version>
+  <description>
+    This package provides basic message publisher and launch file to use 
+    Robotao on Gazebo
+  </description>
+
+  <maintainer email="nesvera@todo.todo">nesvera</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  <!--<exec_depend>controller_manager</exec_depend>-->
+  <exec_depend>gazebo_ros</exec_depend>
+</package>

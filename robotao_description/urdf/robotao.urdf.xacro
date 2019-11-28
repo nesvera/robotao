@@ -1,0 +1,333 @@
+<?xml version="1.0"?>
+<robot name="robotao" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!--
+Remember:
+- Zero is in the center of the object
+- Hip has auxialiary links to simulate a spherical joint
+
+-->
+
+<!-- Import all Gazebo elements: controllers and colors -->
+<xacro:include filename="$(find robotao_description)/urdf/robotao.gazebo" />
+
+<!-- Parameters -->
+<xacro:property name="pi" value="3.141592654"/>
+
+<!-- Axis definition 
+
+    +X - pointing foward from the robot
+    +Y - pointing leftward of the robot
+    +Z - pointing upward from the robot
+
+-->
+
+<!-- Parameters of the robot in meters -->
+<xacro:property name="drop_point" value="1.48"/>                    <!-- w.r.t the center of the Z axis of the torso -->
+
+<xacro:property name="torso_height" value="0.58"/>
+<xacro:property name="torso_radius" value="0.105"/>
+<xacro:property name="hip_to_torso_offset_y" value="0.035"/>        <!-- offset from the side of the torso -->
+<xacro:property name="hip_to_torso_offset_z" value="0.035"/>         <!-- offset from the butt of the torso -->
+<xacro:property name="hip_to_leg_offset_y" value="0.05"/>           <!-- offset from the side of the leg -->
+<xacro:property name="carbon_pipe_radius" value="0.015"/>
+<xacro:property name="upper_leg_height" value="0.56"/>
+<xacro:property name="lower_leg_height" value="0.56"/>
+<xacro:property name="ankle_to_foot_offset_x" value="0.025"/>         <!-- offset from the center of the foot -->
+<xacro:property name="ankle_to_foot_offset_z" value="0.05"/>
+<xacro:property name="foot_height" value="0.03"/>
+<xacro:property name="foot_width" value="0.115"/>
+<xacro:property name="foot_length" value="0.2"/>
+
+<!-- 
+    ===================================================== 
+                            Macro 
+    =====================================================
+-->
+<xacro:macro name="insert_transmission" params="join_name">
+    <transmission name="${join_name}_tran">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="${join_name}">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+
+        <actuator name="${join_name}_motor">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+</xacro:macro>
+
+<xacro:macro name="leg" params="parent prefix reflect">
+    <!-- Links -->
+    <link name="${prefix}_hip_aux_link_1">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.01" length="0.05" />
+            </geometry>
+        </visual>
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.01"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </link>
+
+    <link name="${prefix}_hip_aux_link_2">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 ${pi*0.5} 0"/>
+            <geometry>
+                <cylinder radius="0.01" length="0.05" />
+            </geometry>
+        </visual>
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.01"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </link>
+
+    <link name="${prefix}_hip_aux_link_3">
+        <visual>
+            <origin xyz="0 0 0" rpy="${pi*0.5} 0 0"/>
+            <geometry>
+                <cylinder radius="0.01" length="0.05" />
+            </geometry>
+        </visual>
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.01"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </link>
+
+    <link name="${prefix}_upper_leg">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <!--<cylinder radius="${carbon_pipe_radius}" length="${upper_leg_height}"/>-->
+                <mesh filename="package://robotao_description/meshes/upper_leg.stl" scale="1 1 1"/>
+            </geometry>
+        </visual>
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="2.2"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </link>
+
+    <link name="${prefix}_knee_aux_link_1">
+        <visual>
+            <origin xyz="0 0 0" rpy="${pi*0.5} 0 0"/>
+            <geometry>
+                <cylinder radius="0.01" length="0.05" />
+            </geometry>
+        </visual>
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.01"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </link>
+
+    <link name="${prefix}_lower_leg">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <!--<cylinder radius="${carbon_pipe_radius}" length="${lower_leg_height}"/>-->
+                <mesh filename="package://robotao_description/meshes/lower_leg.stl" scale="1 1 1"/>
+            </geometry>
+        </visual>
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="3.0"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </link>
+    
+    <link name="${prefix}_ankle_aux_link_1">
+        <visual>
+            <origin xyz="0 0 0" rpy="${pi*0.5} 0 0"/>
+            <geometry>
+                <cylinder radius="0.01" length="0.05" />
+            </geometry>
+        </visual>
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.01"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </link>
+
+    <link name="${prefix}_ankle_aux_link_2">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 ${pi*0.5} 0"/>
+            <geometry>
+                <cylinder radius="0.01" length="0.05" />
+            </geometry>
+        </visual>
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.01"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </link>
+
+    <link name="${prefix}_foot">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="${foot_length} ${foot_width} ${foot_height}" rpy="0 0 0"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="${foot_length} ${foot_width} ${foot_height}" rpy="0 0 0"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="5.5"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </link>
+
+    <!-- Joints -->
+    <!-- 3DOF of the hip of the robot, it will simulate the behavior of the mechanism of the real robot -->
+    <joint name="${prefix}_hip_yaw" type="revolute">
+        <axis xyz="0 0 1" />	
+        <parent link="${parent}"/>
+        <child  link="${prefix}_hip_aux_link_1"/>
+        <origin xyz="0  ${reflect*(torso_radius+hip_to_torso_offset_y)} ${-torso_height/2+hip_to_torso_offset_z}" rpy="0 0 0" />  
+        <limit velocity="6.5" effort="1000" lower="${-pi*0.9}" upper="${pi*0.9}" />
+        <dynamics damping="0.1" friction="0.0" /> 
+    </joint>
+    <xacro:insert_transmission join_name="${prefix}_hip_yaw"/>
+
+    <joint name="${prefix}_hip_roll" type="revolute">
+        <axis xyz="1 0 0" />	
+        <parent link="${prefix}_hip_aux_link_1"/>
+        <child  link="${prefix}_hip_aux_link_2"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />        
+        <limit velocity="6.5" effort="1000" lower="${-pi*0.9}" upper="${pi*0.9}" />
+        <dynamics damping="0.1" friction="0.0" /> 
+    </joint>
+    <xacro:insert_transmission join_name="${prefix}_hip_roll"/>
+
+    <joint name="${prefix}_hip_pitch" type="revolute">
+        <axis xyz="0 1 0" />	
+        <parent link="${prefix}_hip_aux_link_2"/>
+        <child  link="${prefix}_hip_aux_link_3"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />        
+        <limit velocity="6.5" effort="1000" lower="${-pi*0.9}" upper="${pi*0.9}" />
+        <dynamics damping="0.1" friction="0.0" />      
+    </joint>
+    <xacro:insert_transmission join_name="${prefix}_hip_pitch"/>
+
+    <!-- fake joint that connect the hip with the upper leg through the aux_links -->
+    <joint name="${prefix}_hip_to_leg" type="fixed">
+        <parent link="${prefix}_hip_aux_link_3"/>
+        <child  link="${prefix}_upper_leg"/>
+        <origin xyz="0 ${reflect*hip_to_leg_offset_y} ${-upper_leg_height/2}" rpy="0 0 0" />        
+    </joint>
+
+    <!-- 1DOF of the knee of the robot, it will simulate the behavior of the mechanism of the real robot -->
+    <joint name="${prefix}_knee_pitch" type="revolute">
+        <axis xyz="0 1 0" />	
+        <parent link="${prefix}_upper_leg"/>
+        <child  link="${prefix}_knee_aux_link_1"/>
+        <origin xyz="0 0 ${-upper_leg_height/2}" rpy="0 0 0" />        
+        <limit velocity="6.5" effort="1000" lower="${-pi*0.9}" upper="${pi*0.9}" />
+        <dynamics damping="0.1" friction="0.0" /> 
+    </joint>
+    <xacro:insert_transmission join_name="${prefix}_knee_pitch"/>
+
+    <!-- fake joint that connect the upper leg with the lower leg through the aux_links -->
+    <joint name="${prefix}_upper_to_lower_leg" type="fixed">
+        <parent link="${prefix}_knee_aux_link_1"/>
+        <child  link="${prefix}_lower_leg"/>
+        <origin xyz="0 0 ${-lower_leg_height/2}" rpy="0 0 0" />        
+    </joint>
+
+    <!-- 2DOF of the ankle of the robot, it will simulate the behavior of the mechanism of the real robot -->
+    <joint name="${prefix}_ankle_pitch" type="revolute">
+        <axis xyz="0 1 0" />	
+        <parent link="${prefix}_lower_leg"/>
+        <child  link="${prefix}_ankle_aux_link_1"/>
+        <origin xyz="0 0 ${-lower_leg_height/2}" rpy="0 0 0" />        
+        <limit velocity="6.5" effort="1000" lower="${-pi*0.9}" upper="${pi*0.9}" />
+        <dynamics damping="0.1" friction="0.0" /> 
+    </joint>
+    <xacro:insert_transmission join_name="${prefix}_ankle_pitch"/>
+
+    <joint name="${prefix}_ankle_roll" type="revolute">
+        <axis xyz="1 0 0" />	
+        <parent link="${prefix}_ankle_aux_link_1"/>
+        <child  link="${prefix}_ankle_aux_link_2"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />        
+        <limit velocity="6.5" effort="1000" lower="${-pi*0.9}" upper="${pi*0.9}" />
+        <dynamics damping="0.1" friction="0.0" /> 
+    </joint>
+    <xacro:insert_transmission join_name="${prefix}_ankle_roll"/>
+
+    <!-- fake joint that connect the lower leg with the foot through the aux_links -->
+    <joint name="${prefix}_leg_to_foot" type="fixed">
+        <parent link="${prefix}_ankle_aux_link_2"/>
+        <child  link="${prefix}_foot"/>
+        <origin xyz="${ankle_to_foot_offset_x} 0 ${-ankle_to_foot_offset_z}" rpy="0 0 0" />        
+    </joint>
+
+
+</xacro:macro>
+
+<!-- 
+    ===================================================== 
+                        Base link
+    =====================================================
+-->
+
+<!-- TORSO -->
+<link name="torso_link">
+    <visual>
+        <origin xyz="0 0 ${-0.02}" rpy="0 0 0"/>
+        <geometry>
+            <!--<cylinder radius="${torso_radius}" length="${torso_height}" />-->
+            <mesh filename="package://robotao_description/meshes/body.stl" scale="1 1 1"/>
+        </geometry>
+    </visual>
+
+    <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder radius="${torso_radius}" length="${torso_height}" />
+        </geometry>
+    </collision>
+
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="30.8"/>
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+    </inertial>
+</link>
+
+<!-- Freeze the robot in place -->
+<gazebo>
+    <static> false </static>
+</gazebo>
+
+<xacro:leg prefix="left" reflect="1" parent="torso_link"/>
+<xacro:leg prefix="right" reflect="-1" parent="torso_link"/>
+
+</robot>
