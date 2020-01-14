@@ -15,7 +15,7 @@ class Gait:
     """
     Attributes
     ----------
-    C1   - Halt Position Leg Extension
+    C1   - Halt Position Leg Extension   e.g. 0 = fully extended, 1 = fully contrated
     C2   - Halt Position Leg Roll Angle
     C3   - Halt Position Leg Pitch Angle
     C4   - Halt Position Foot Roll Angle
@@ -46,19 +46,19 @@ class Gait:
     C27  - Lateral Proportional Step Frequency
     """    
     def __init__(self, side, step_freq=0.09):
-        self.C1 =   0.02
-        self.C2 =   0.1
-        self.C3 =   0               #0.02
-        self.C4 =   0.03
-        self.C5 =   0
-        self.C6 =   0.02            # talvez
+        self.C1 =   0.03            
+        self.C2 =   0.15
+        self.C3 =   0.02
+        self.C4 =   0.00*side
+        self.C5 =   0.03
+        self.C6 =   0.025            # talvez
         self.C7 =   0
         self.C8 =   0.02            # talvez
         self.C9 =   0.12
         self.Ct0 =  0
         self.Ct1 =  2.3876
         self.C10 =  0.17
-        self.C11 =  0.12
+        self.C11 =  0.25
         self.C12 =  0.1
         self.C13 =  0.05
         self.C14 =  0.015
@@ -67,7 +67,7 @@ class Gait:
         self.C17 =  0.035
         self.C18 =  0
         self.C19 =  0
-        self.C20 =  0           #-0.07
+        self.C20 =  0       #-0.07
         self.C21 =  3.5
         self.C22 =  0.0085
         self.C23 =  0.01
@@ -307,6 +307,8 @@ def vel_cmd_callback(data):
 
 if __name__ == "__main__":
 
+    global robot_vel
+
     # initialize the node
     rospy.init_node("walk_node")
     
@@ -338,7 +340,7 @@ if __name__ == "__main__":
 
     i = 0
 
-    timer = 0
+    timer = time.time()
     state = "idle"
 
     #while not rospy.is_shutdown():
